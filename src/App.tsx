@@ -1,4 +1,4 @@
-import { EditableTable } from "@/components/editable-table";
+import { DataTable } from "@/components/data-table";
 import { VirtualizedCombobox } from "@/components/ui/virtualized-combobox";
 import { useState } from "react";
 
@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       <div className="container px-8 py-8">
-        <EditableTable />
+        <DataTable />
         <div className="mt-4">
           <VirtualizedCombobox
             options={initialOptions}
