@@ -3,6 +3,8 @@ type CommonColumnProps = {
   meta?: {
     headerClassName?: string;
     cellClassName?: string;
+    inputType?: "text" | "number" | "select" | "date" | "textarea";
+    selectOptions?: { label: string; value: string | number }[];
   };
 };
 
@@ -23,4 +25,5 @@ export type TableProp<T> = {
   maxHeight?: string;
   stickyHeader?: boolean;
   id: string;
+  rowEditable?: boolean | ((row: T, index: number) => boolean);
 };
