@@ -1,26 +1,15 @@
 import { Pencil, Save, Trash2, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { ColumnType } from "./types";
+import { ColumnType } from "../data-table/types";
+import { NepseDataType } from "./types";
 
-export type DataType = {
-  script: string;
-  balance: number;
-  prevLTP: number;
-  prevValue: number;
-  ltp: number;
-  valueAsOfLTP: number;
-  costPrice: number;
-  totalInvestment: number;
-  overallPL: number;
-  plPercent: string;
-};
 export const getColumns = (
   isEditable?: boolean | false
-): ColumnType<DataType>[] => [
+): ColumnType<NepseDataType>[] => [
   {
     header: "Script",
     accessor: "script",
-    cell: (row: DataType) => <span>{row.script}</span>,
+    cell: (row: NepseDataType) => <span>{row.script}</span>,
     meta: {
       cellClassName: "w-[150px]",
       inputType: "text",
@@ -159,7 +148,7 @@ export const getColumns = (
   },
 ];
 
-export const data: DataType[] = [
+export const data: NepseDataType[] = [
   {
     script: "NABIL",
     balance: 100,

@@ -1,34 +1,14 @@
 import { cn } from "@/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef, useState } from "react";
-import { z } from "zod";
-import { data, getColumns } from "./column";
 import { DataTableContext } from "./data-table.context";
 import { TableHeader } from "./table-header.component";
 import { TableRow } from "./table-row.component";
 import { TableProp } from "./types";
-export const DataTable = () => {
-  const columns = getColumns(true);
-  const rowSchema = z.object({
-    balance: z
-      .number({ required_error: "Balance is required" })
-      .min(1, "Balance is required"),
-    ltp: z.number({ required_error: "LTP is required" }),
-    script: z.string().nonempty("Script is required"),
-    // add other fields as needed...
-  });
-  return (
-    <Table
-      columns={columns}
-      data={data}
-      id="script"
-      isEditable
-      validationSchema={rowSchema}
-    />
-  );
-};
 
-const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
+export const DataTable = <T extends { [key: string]: unknown }>(
+  props: TableProp<T>
+) => {
   const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
   const [isAllEditable, setIsAllEditable] = useState(false);
 
