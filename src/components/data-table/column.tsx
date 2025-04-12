@@ -23,10 +23,7 @@ export const getColumns = (
     cell: (row: DataType) => <span>{row.script}</span>,
     meta: {
       cellClassName: "w-[150px]",
-      rules: {
-        required: "Balance is required",
-        min: { value: 1, message: "Script is required" },
-      },
+      inputType: "text",
     },
     editable: isEditable,
   },
@@ -36,6 +33,7 @@ export const getColumns = (
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
+      inputType: "number",
     },
   },
   {
@@ -129,10 +127,12 @@ export const getColumns = (
         {ctx?.editable && (
           <>
             <Button
-              onClick={() => {
-                // TODO: Save logic here (persist updated values)
-                ctx?.submitRow();
-                ctx?.onCancelEdit?.(); // make not editable
+              onClick={async (e) => {
+                e.stopPropagation();
+                const result = await ctx?.submitRow?.();
+                if (result !== undefined) {
+                  console.log("Row submitted data:", result);
+                }
               }}
               variant={"ghost"}
               className="cursor-pointer hover:bg-green-200 !px-2 !py-2 border"

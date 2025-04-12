@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 type CommonColumnProps = {
   header: string;
   editable?: boolean;
@@ -43,4 +45,5 @@ export type TableProp<T> = {
   onEditRow?: (rowIndex: number) => void;
   isAllRowsEditable?: boolean;
   onToggleAllEdit?: () => void;
+  validationSchema?: z.ZodObject<any>;
 };

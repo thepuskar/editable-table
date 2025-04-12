@@ -9,7 +9,13 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { ColumnType } from "./types";
-import { Controller, Control, FieldValues, FieldErrors } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldValues,
+  FieldErrors,
+  Path,
+} from "react-hook-form";
 
 type DataTableCellProps<T extends FieldValues> = {
   row: T;
@@ -21,7 +27,7 @@ type DataTableCellProps<T extends FieldValues> = {
   isAllEditable?: boolean;
   control?: Control<T>;
   errors?: FieldErrors<T>;
-  submitRow?: () => void;
+  submitRow?: () => Promise<T | undefined>;
   rules?: Record<string, unknown>;
 };
 
@@ -36,7 +42,6 @@ export const DataTableCell = <T extends FieldValues>({
   control,
   errors,
   submitRow,
-  rules,
 }: DataTableCellProps<T>) => {
   if ("action" in column) {
     return column.action?.(row, rowIndex, {
@@ -45,7 +50,7 @@ export const DataTableCell = <T extends FieldValues>({
       isAllEditable,
       editable,
       onCancelEdit: () => onEditRow?.(null),
-      submitRow,
+      submitRow: submitRow ?? (() => {}),
     });
   }
 
@@ -60,9 +65,8 @@ export const DataTableCell = <T extends FieldValues>({
 
   return (
     <Controller
-      name={name}
+      name={name as Path<T>}
       control={control}
-      rules={rules ?? { required: true }}
       render={({ field }) => {
         switch (inputType) {
           case "textarea":
@@ -87,13 +91,37 @@ export const DataTableCell = <T extends FieldValues>({
                 </SelectContent>
               </Select>
             );
+          case "number":
+            return (
+              <>
+                <Input
+                  {...field}
+                  type="number"
+                  value={field.value ?? ""}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  className={errors?.[name] ? "border-red-500" : ""}
+                />
+                {errors?.[name]?.message && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {String(errors[name].message)}
+                  </p>
+                )}
+              </>
+            );
           default:
             return (
-              <Input
-                {...field}
-                type={inputType}
-                className={errors?.[name] && "border-red-500"}
-              />
+              <>
+                <Input
+                  {...field}
+                  type={inputType}
+                  className={errors?.[name] && "border-red-500"}
+                />
+                {errors?.[name]?.message && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {String(errors[name].message)}
+                  </p>
+                )}
+              </>
             );
         }
       }}

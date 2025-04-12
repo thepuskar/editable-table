@@ -1,15 +1,31 @@
 import { cn } from "@/utils";
-import { useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useRef, useState } from "react";
+import { z } from "zod";
 import { data, getColumns } from "./column";
 import { DataTableContext } from "./data-table.context";
 import { TableHeader } from "./table-header.component";
 import { TableRow } from "./table-row.component";
 import { TableProp } from "./types";
-
 export const DataTable = () => {
   const columns = getColumns(true);
-  return <Table columns={columns} data={data} id="script" isEditable />;
+  const rowSchema = z.object({
+    balance: z
+      .number({ required_error: "Balance is required" })
+      .min(1, "Balance is required"),
+    ltp: z.number({ required_error: "LTP is required" }),
+    script: z.string().nonempty("Script is required"),
+    // add other fields as needed...
+  });
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      id="script"
+      isEditable
+      validationSchema={rowSchema}
+    />
+  );
 };
 
 const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
@@ -35,7 +51,7 @@ const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
   });
 
   const virtualItems = rowVirtualizer.getVirtualItems();
-  console.log("editableRowIndex", editableRowIndex);
+
   return (
     <DataTableContext.Provider
       value={{
@@ -84,6 +100,7 @@ const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
                     style={{
                       marginTop: `${virtualRow.start}px`, // pushes each row into place
                     }}
+                    validationSchema={props.validationSchema}
                   />
                 );
               })}

@@ -1,11 +1,15 @@
-// table-row.component.tsx
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import {
-  FormProvider,
-  useForm,
-  FieldValues,
   DefaultValues,
+  FieldValues,
+  FormProvider,
+  Resolver,
+  SubmitHandler,
+  useForm,
+  UseFormReturn,
 } from "react-hook-form";
+import { z } from "zod";
 import { DataTableCell } from "./data-table-cell.component";
 import { useDataTableContext } from "./data-table.context";
 import { ColumnType } from "./types";
@@ -18,6 +22,7 @@ type DataRowProps<T extends FieldValues> = {
   onToggleAllEdit: () => void;
   isAllEditable: boolean;
   style?: React.CSSProperties;
+  validationSchema?: z.ZodObject<any>;
 };
 
 function TableRowInner<T extends FieldValues>(
@@ -29,6 +34,7 @@ function TableRowInner<T extends FieldValues>(
     onToggleAllEdit,
     isAllEditable,
     style,
+    validationSchema,
   }: DataRowProps<T>,
   ref: React.Ref<HTMLFormElement>
 ) {
@@ -38,6 +44,9 @@ function TableRowInner<T extends FieldValues>(
 
   const methods = useForm<T>({
     defaultValues: row as DefaultValues<T>,
+    resolver: zodResolver(
+      (validationSchema as z.ZodObject<any>).passthrough()
+    ) as unknown as Resolver<T, any, T>,
     mode: "onChange",
   });
 
@@ -45,7 +54,7 @@ function TableRowInner<T extends FieldValues>(
     control,
     handleSubmit,
     formState: { errors },
-  } = methods;
+  } = methods as unknown as UseFormReturn<T>;
 
   const handleRowClick = () => {
     if (isEditable) {
@@ -53,9 +62,9 @@ function TableRowInner<T extends FieldValues>(
     }
   };
 
-  const onSubmit = (data: T) => {
-    console.log("Submitted row:", data);
+  const onSubmit: SubmitHandler<T> = (data) => {
     setEditableRowIndex(null);
+    return data;
   };
 
   return (
@@ -92,8 +101,14 @@ function TableRowInner<T extends FieldValues>(
               isAllEditable={isAllEditable}
               control={control}
               errors={errors}
-              submitRow={() => handleSubmit(onSubmit)()}
-              rules={col?.meta?.rules}
+              submitRow={async () =>
+                new Promise<T | undefined>((resolve) => {
+                  handleSubmit((data: T) => {
+                    setEditableRowIndex(null);
+                    resolve(data);
+                  })();
+                })
+              }
             />
           </div>
         ))}
