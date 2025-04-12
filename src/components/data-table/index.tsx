@@ -26,8 +26,7 @@ export const DataTable = <T extends { [key: string]: unknown }>(
   const rowVirtualizer = useVirtualizer({
     count: props.data.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 48, // should match your row height
-    overscan: 5,
+    estimateSize: () => 20,
   });
 
   const virtualItems = rowVirtualizer.getVirtualItems();
@@ -41,53 +40,46 @@ export const DataTable = <T extends { [key: string]: unknown }>(
       }}
     >
       <div
-        className="max-w-full overflow-x-auto "
-        style={{ height: props?.height || "auto" }}
+        ref={parentRef}
+        className="max-w-full overflow-x-auto border border-gray-300 rounded"
       >
         <div
-          ref={parentRef}
-          className={cn(
-            props?.maxHeight && props?.maxHeight,
-            "overflow-y-auto border w-fit"
-          )}
+          style={{
+            height: `${props?.height ?? `${rowVirtualizer.getTotalSize()}px`}`,
+          }}
+          className={cn("border w-fit")}
         >
           <div className="table w-full relative">
             {/* Table Header */}
             <TableHeader columns={props.columns} sticky={props.stickyHeader} />
 
             {/* Virtualized Rows */}
-            <div
-              style={{
-                height: rowVirtualizer.getTotalSize(),
-                position: "relative",
-              }}
-              className="table-row-group"
-            >
-              {/* Virtualized Rows */}
-              {virtualItems.map((virtualRow) => {
-                const row = props.data[virtualRow.index];
-                const rowId = String(row[props.id] ?? "");
+            {virtualItems.map((virtualRow, index) => {
+              const row = props.data[virtualRow.index];
+              const rowId = String(row[props.id] ?? "");
 
-                const isEditable = editableRowIndex === virtualRow.index;
-                return (
-                  <TableRow
-                    key={`${rowId}-${isEditable ? "edit" : "view"}`}
-                    data-index={virtualRow.index}
-                    ref={rowVirtualizer.measureElement}
-                    row={row}
-                    rowIndex={virtualRow.index}
-                    columns={props.columns}
-                    onEditRow={handleEditRow}
-                    onToggleAllEdit={toggleEditAll}
-                    isAllEditable={isAllEditable}
-                    style={{
-                      marginTop: `${virtualRow.start}px`, // pushes each row into place
-                    }}
-                    validationSchema={props.validationSchema}
-                  />
-                );
-              })}
-            </div>
+              const isEditable = editableRowIndex === virtualRow.index;
+              return (
+                <TableRow
+                  key={`${rowId}-${isEditable ? "edit" : "view"}`}
+                  dataIndex={virtualRow.index}
+                  ref={rowVirtualizer.measureElement}
+                  row={row}
+                  rowIndex={virtualRow.index}
+                  columns={props.columns}
+                  onEditRow={handleEditRow}
+                  onToggleAllEdit={toggleEditAll}
+                  isAllEditable={isAllEditable}
+                  validationSchema={props.validationSchema}
+                  style={{
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${
+                      virtualRow.start - index * virtualRow.size
+                    }px)`,
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
