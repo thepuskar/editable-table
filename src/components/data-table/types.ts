@@ -15,7 +15,15 @@ type DataColumn<T> = CommonColumnProps & {
 };
 
 type ActionColumn<T> = CommonColumnProps & {
-  action: (row: T, rowIndex: number) => React.ReactNode;
+  action: (
+    row: T,
+    rowIndex: number,
+    ctx?: {
+      onEditRow?: (index: number) => void;
+      onToggleAllEdit?: () => void;
+      isAllEditable?: boolean;
+    }
+  ) => React.ReactNode;
 };
 
 export type ColumnType<T> = DataColumn<T> | ActionColumn<T>;

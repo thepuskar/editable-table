@@ -3,12 +3,24 @@ import { useDataTableContext } from "./data-table.context";
 import { ColumnType } from "./types";
 
 type DataRowProps<T> = {
-  columns: ColumnType<T>[];
   row: T;
   rowIndex: number;
+  columns: ColumnType<T>[];
+  editable: boolean;
+  onEditRow: (index: number) => void;
+  onToggleAllEdit: () => void;
+  isAllEditable: boolean;
 };
 
-export function TableRow<T>({ columns, row, rowIndex }: DataRowProps<T>) {
+export function TableRow<T>({
+  columns,
+  row,
+  rowIndex,
+  editable,
+  onEditRow,
+  onToggleAllEdit,
+  isAllEditable,
+}: DataRowProps<T>) {
   const { editableRowIndex, setEditableRowIndex, isEditable } =
     useDataTableContext<T>();
   const isRowEditable = rowIndex === editableRowIndex;
@@ -39,7 +51,10 @@ export function TableRow<T>({ columns, row, rowIndex }: DataRowProps<T>) {
             column={col}
             row={row}
             rowIndex={rowIndex}
-            editable={isRowEditable}
+            editable={editable}
+            onEditRow={onEditRow}
+            onToggleAllEdit={onToggleAllEdit}
+            isAllEditable={isAllEditable}
           />
         </div>
       ))}

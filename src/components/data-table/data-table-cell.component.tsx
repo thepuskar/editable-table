@@ -14,6 +14,9 @@ type DataTableCellProps<T> = {
   column: ColumnType<T>;
   rowIndex: number;
   editable: boolean;
+  onEditRow?: (index: number) => void;
+  onToggleAllEdit?: () => void;
+  isAllEditable?: boolean;
 };
 
 export const DataTableCell = <T,>({
@@ -21,10 +24,17 @@ export const DataTableCell = <T,>({
   column,
   rowIndex,
   editable,
+  onEditRow,
+  onToggleAllEdit,
+  isAllEditable,
 }: DataTableCellProps<T>) => {
   // If it's an action column
   if ("action" in column) {
-    return column.action?.(row, rowIndex) ?? null;
+    return column.action?.(row, rowIndex, {
+      onEditRow,
+      onToggleAllEdit,
+      isAllEditable,
+    });
   }
 
   //Get base value
@@ -34,7 +44,6 @@ export const DataTableCell = <T,>({
   if (!(editable && column.editable)) {
     return column.cell?.(row, rowIndex) ?? String(value);
   }
-  console.log("Test");
 
   //Column is editable AND this row is editable
   const inputType = column.meta?.inputType ?? "text";

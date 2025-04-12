@@ -7,13 +7,7 @@ import { TableRow } from "./table-row.component";
 import { TableProp } from "./types";
 
 export const DataTable = () => {
-  const [isEditable, setIsEditable] = useState(false);
-
-  const handleEditAll = () => {
-    setIsEditable(true);
-  };
-
-  const columns = getColumns(isEditable, handleEditAll);
+  const columns = getColumns(true);
   return (
     <>
       <Table columns={columns} data={data} id="script" isEditable />
@@ -23,6 +17,17 @@ export const DataTable = () => {
 
 const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
   const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
+  const [isAllEditable, setIsAllEditable] = useState(false);
+
+  const handleEditRow = (index: number) => {
+    setEditableRowIndex(index);
+    setIsAllEditable(false);
+  };
+
+  const toggleEditAll = () => {
+    setIsAllEditable((prev) => !prev);
+    setEditableRowIndex(null);
+  };
 
   return (
     <>
@@ -52,10 +57,14 @@ const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
                 const key = String(row[props.id] ?? "");
                 return (
                   <TableRow
-                    columns={props.columns}
-                    row={row}
                     key={key}
+                    row={row}
                     rowIndex={index}
+                    columns={props.columns}
+                    editable={isAllEditable || editableRowIndex === index}
+                    onEditRow={handleEditRow}
+                    onToggleAllEdit={toggleEditAll}
+                    isAllEditable={isAllEditable}
                   />
                 );
               })}

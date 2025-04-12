@@ -13,8 +13,7 @@ export type DataType = {
   plPercent: string;
 };
 export const getColumns = (
-  isEditable: boolean,
-  onEditClick: () => void
+  isEditable?: boolean | false
 ): ColumnType<DataType>[] => [
   {
     header: "Script",
@@ -99,9 +98,15 @@ export const getColumns = (
   },
   {
     header: "Actions",
-    action: (row) => (
+    action: (row, rowIndex, ctx) => (
       <div className="flex gap-2">
-        <button className="text-blue-600 text-xs" onClick={() => onEditClick()}>
+        <button
+          className="text-blue-600 text-xs"
+          onClick={(e) => {
+            e.stopPropagation();
+            ctx?.onEditRow?.(rowIndex);
+          }}
+        >
           Edit
         </button>
         <button
