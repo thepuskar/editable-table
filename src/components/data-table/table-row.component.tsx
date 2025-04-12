@@ -23,6 +23,7 @@ type DataRowProps<T extends FieldValues> = {
   isAllEditable: boolean;
   style?: React.CSSProperties;
   validationSchema?: z.ZodObject<any>;
+  dataIndex?: number;
 };
 
 function TableRowInner<T extends FieldValues>(
@@ -35,6 +36,7 @@ function TableRowInner<T extends FieldValues>(
     isAllEditable,
     style,
     validationSchema,
+    dataIndex,
   }: DataRowProps<T>,
   ref: React.Ref<HTMLFormElement>
 ) {
@@ -76,6 +78,7 @@ function TableRowInner<T extends FieldValues>(
         className={`table-row ${
           isRowEditable ? "bg-yellow-100" : "hover:bg-blue-50"
         } cursor-pointer`}
+        data-index={dataIndex}
       >
         {columns.map((col, colIndex) => (
           <div
