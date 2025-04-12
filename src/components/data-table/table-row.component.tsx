@@ -81,7 +81,6 @@ function TableRowInner<T extends FieldValues>(
           <div
             onClick={() => {
               if ("action" in col) return;
-              if (!((isRowEditable || isAllEditable) && col.editable)) return;
               handleRowClick();
             }}
             key={`${String(
