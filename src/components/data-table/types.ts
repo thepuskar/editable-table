@@ -6,6 +6,7 @@ type CommonColumnProps = {
     cellClassName?: string;
     inputType?: "text" | "number" | "select" | "date" | "textarea";
     selectOptions?: { label: string; value: string | number }[];
+    rules?: Record<string, unknown>;
   };
 };
 
@@ -24,6 +25,7 @@ type ActionColumn<T> = CommonColumnProps & {
       onToggleAllEdit?: () => void;
       isAllEditable?: boolean;
       editable?: boolean;
+      submitRow: () => void;
     }
   ) => React.ReactNode;
 };

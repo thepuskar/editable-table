@@ -23,6 +23,10 @@ export const getColumns = (
     cell: (row: DataType) => <span>{row.script}</span>,
     meta: {
       cellClassName: "w-[150px]",
+      rules: {
+        required: "Balance is required",
+        min: { value: 1, message: "Script is required" },
+      },
     },
     editable: isEditable,
   },
@@ -127,6 +131,7 @@ export const getColumns = (
             <Button
               onClick={() => {
                 // TODO: Save logic here (persist updated values)
+                ctx?.submitRow();
                 ctx?.onCancelEdit?.(); // make not editable
               }}
               variant={"ghost"}

@@ -17,7 +17,6 @@ const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
   const [isAllEditable, setIsAllEditable] = useState(false);
 
   const handleEditRow = (index: number | null) => {
-    console.log("Setting editableRowIndex to:", index); // ✅ LOG HERE
     setEditableRowIndex(index);
   };
 
