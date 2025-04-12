@@ -12,59 +12,96 @@ export type DataType = {
   overallPL: number;
   plPercent: string;
 };
-export const columns: ColumnType<DataType>[] = [
+export const getColumns = (
+  isEditable: boolean,
+  onEditClick: () => void
+): ColumnType<DataType>[] => [
   {
     header: "Script",
     accessor: "script",
     cell: (row: DataType) => <span>{row.script}</span>,
     meta: {
-      cellClassName: "min-w-[150px]",
+      cellClassName: "w-[150px]",
     },
+    editable: isEditable,
   },
   {
     header: "Balance",
     accessor: "balance",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Previous LTP",
     accessor: "prevLTP",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Previous Value",
     accessor: "prevValue",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "LTP",
     accessor: "ltp",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Value As of LTP",
     accessor: "valueAsOfLTP",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Cost Price",
     accessor: "costPrice",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Total Investment",
     accessor: "totalInvestment",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Overall P/L",
     accessor: "overallPL",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "P/L %",
     accessor: "plPercent",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
   },
   {
     header: "Actions",
     action: (row) => (
       <div className="flex gap-2">
-        <button
-          className="text-blue-600 text-xs"
-          onClick={() => console.log("Edit", row)}
-        >
+        <button className="text-blue-600 text-xs" onClick={() => onEditClick()}>
           Edit
         </button>
         <button

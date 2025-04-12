@@ -6,21 +6,28 @@ type DataRowProps<T> = {
   columns: ColumnType<T>[];
   row: T;
   rowIndex: number;
-  isEditable?: boolean | ((row: T, rowIndex: number) => boolean);
 };
 
 export function TableRow<T>({ columns, row, rowIndex }: DataRowProps<T>) {
-  const { rowEditable } = useDataTableContext<T>();
+  const { editableRowIndex, setEditableRowIndex, isEditable } =
+    useDataTableContext<T>();
+  const isRowEditable = rowIndex === editableRowIndex;
 
-  const isEditable =
-    typeof rowEditable === "function"
-      ? rowEditable(row, rowIndex)
-      : !!rowEditable;
+  const handleRowClick = () => {
+    if (isEditable) {
+      setEditableRowIndex(rowIndex);
+    }
+  };
 
   return (
-    <div className="table-row">
+    <div
+      className={`table-row ${
+        isRowEditable ? "bg-yellow-100" : "hover:bg-blue-50"
+      } cursor-pointer`}
+    >
       {columns.map((col, colIndex) => (
         <div
+          onClick={handleRowClick}
           key={`${String(
             "accessor" in col ? col.accessor : colIndex
           )}-${rowIndex}`}
@@ -32,7 +39,7 @@ export function TableRow<T>({ columns, row, rowIndex }: DataRowProps<T>) {
             column={col}
             row={row}
             rowIndex={rowIndex}
-            editable={isEditable}
+            editable={isRowEditable}
           />
         </div>
       ))}

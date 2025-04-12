@@ -15,20 +15,30 @@ type DataTableCellProps<T> = {
   rowIndex: number;
   editable: boolean;
 };
+
 export const DataTableCell = <T,>({
   row,
   column,
   rowIndex,
   editable,
 }: DataTableCellProps<T>) => {
-  if ("action" in column) return column.action(row, rowIndex);
+  // If it's an action column
+  if ("action" in column) {
+    return column.action?.(row, rowIndex) ?? null;
+  }
 
-  const value = row[column.accessor];
-  const inputType = column.meta?.inputType ?? "text";
+  //Get base value
+  const value = column.accessor ? row[column.accessor] : "";
 
-  if (!editable) {
+  //If not editable OR column is not marked editable, show read-only
+  if (!(editable && column.editable)) {
     return column.cell?.(row, rowIndex) ?? String(value);
   }
+  console.log("Test");
+
+  //Column is editable AND this row is editable
+  const inputType = column.meta?.inputType ?? "text";
+
   switch (inputType) {
     case "text":
     case "number":

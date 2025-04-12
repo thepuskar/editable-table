@@ -1,22 +1,38 @@
 import { cn } from "@/utils";
-import { columns, data } from "./column";
-import { TableHeader } from "./table-header.component";
-import { TableProp } from "./types";
-import { TableRow } from "./table-row.component";
+import { useState } from "react";
+import { data, getColumns } from "./column";
 import { DataTableContext } from "./data-table.context";
+import { TableHeader } from "./table-header.component";
+import { TableRow } from "./table-row.component";
+import { TableProp } from "./types";
 
 export const DataTable = () => {
+  const [isEditable, setIsEditable] = useState(false);
+
+  const handleEditAll = () => {
+    setIsEditable(true);
+  };
+
+  const columns = getColumns(isEditable, handleEditAll);
   return (
     <>
-      <Table columns={columns} data={data} id="script" rowEditable={true} />
+      <Table columns={columns} data={data} id="script" isEditable />
     </>
   );
 };
 
 const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
+  const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
+
   return (
     <>
-      <DataTableContext.Provider value={{ rowEditable: props.rowEditable }}>
+      <DataTableContext.Provider
+        value={{
+          editableRowIndex,
+          setEditableRowIndex,
+          isEditable: props.isEditable,
+        }}
+      >
         <div className="max-w-full overflow-x-auto">
           <div
             className={cn(
@@ -26,7 +42,10 @@ const Table = <T extends { [key: string]: unknown }>(props: TableProp<T>) => {
           >
             <div className="table w-full">
               {/* Header */}
-              <TableHeader columns={columns} sticky={props.stickyHeader} />
+              <TableHeader
+                columns={props.columns}
+                sticky={props.stickyHeader}
+              />
 
               {/* Table Rows */}
               {props.data.map((row, index) => {

@@ -1,5 +1,6 @@
 type CommonColumnProps = {
   header: string;
+  editable?: boolean;
   meta?: {
     headerClassName?: string;
     cellClassName?: string;
@@ -25,5 +26,9 @@ export type TableProp<T> = {
   maxHeight?: string;
   stickyHeader?: boolean;
   id: string;
-  rowEditable?: boolean | ((row: T, index: number) => boolean);
+  isEditable?: boolean;
+  editableRowIndex?: number | null;
+  onEditRow?: (rowIndex: number) => void;
+  isAllRowsEditable?: boolean;
+  onToggleAllEdit?: () => void;
 };
