@@ -34,7 +34,7 @@ type ActionColumn<T> = CommonColumnProps & {
 
 export type ColumnType<T> = DataColumn<T> | ActionColumn<T>;
 
-export type TableProp<T> = {
+export type DataTableProp<T> = {
   columns: ColumnType<T>[];
   data: T[];
   maxHeight?: string;
@@ -46,4 +46,5 @@ export type TableProp<T> = {
   isAllRowsEditable?: boolean;
   onToggleAllEdit?: () => void;
   validationSchema?: z.ZodObject<any>;
+  height?: string;
 };
