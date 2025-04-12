@@ -4,10 +4,10 @@ import { useRef, useState } from "react";
 import { DataTableContext } from "./data-table.context";
 import { TableHeader } from "./table-header.component";
 import { TableRow } from "./table-row.component";
-import { TableProp } from "./types";
+import { DataTableProp } from "./types";
 
 export const DataTable = <T extends { [key: string]: unknown }>(
-  props: TableProp<T>
+  props: DataTableProp<T>
 ) => {
   const [editableRowIndex, setEditableRowIndex] = useState<number | null>(null);
   const [isAllEditable, setIsAllEditable] = useState(false);
@@ -40,7 +40,10 @@ export const DataTable = <T extends { [key: string]: unknown }>(
         isEditable: props.isEditable,
       }}
     >
-      <div className="max-w-full overflow-x-auto">
+      <div
+        className="max-w-full overflow-x-auto "
+        style={{ height: props?.height || "auto" }}
+      >
         <div
           ref={parentRef}
           className={cn(
