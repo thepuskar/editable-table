@@ -20,8 +20,10 @@ type ActionColumn<T> = CommonColumnProps & {
     rowIndex: number,
     ctx?: {
       onEditRow?: (index: number) => void;
+      onCancelEdit?: () => void; // ✅ new helper
       onToggleAllEdit?: () => void;
       isAllEditable?: boolean;
+      editable?: boolean;
     }
   ) => React.ReactNode;
 };

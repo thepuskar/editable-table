@@ -1,3 +1,4 @@
+import React from "react";
 import { DataTableCell } from "./data-table-cell.component";
 import { useDataTableContext } from "./data-table.context";
 import { ColumnType } from "./types";
@@ -6,21 +7,24 @@ type DataRowProps<T> = {
   row: T;
   rowIndex: number;
   columns: ColumnType<T>[];
-  editable: boolean;
-  onEditRow: (index: number) => void;
+  onEditRow: (index: number | null) => void;
   onToggleAllEdit: () => void;
   isAllEditable: boolean;
+  style?: React.CSSProperties;
 };
 
-export function TableRow<T>({
-  columns,
-  row,
-  rowIndex,
-  editable,
-  onEditRow,
-  onToggleAllEdit,
-  isAllEditable,
-}: DataRowProps<T>) {
+function TableRowInner<T>(
+  {
+    columns,
+    row,
+    rowIndex,
+    onEditRow,
+    onToggleAllEdit,
+    isAllEditable,
+    style,
+  }: DataRowProps<T>,
+  ref: React.Ref<HTMLDivElement>
+) {
   const { editableRowIndex, setEditableRowIndex, isEditable } =
     useDataTableContext<T>();
   const isRowEditable = rowIndex === editableRowIndex;
@@ -33,13 +37,19 @@ export function TableRow<T>({
 
   return (
     <div
+      ref={ref}
+      style={style}
       className={`table-row ${
         isRowEditable ? "bg-yellow-100" : "hover:bg-blue-50"
       } cursor-pointer`}
     >
       {columns.map((col, colIndex) => (
         <div
-          onClick={handleRowClick}
+          onClick={() => {
+            if ("action" in col) return;
+            if (!((isRowEditable || isAllEditable) && col.editable)) return;
+            handleRowClick();
+          }}
           key={`${String(
             "accessor" in col ? col.accessor : colIndex
           )}-${rowIndex}`}
@@ -51,7 +61,7 @@ export function TableRow<T>({
             column={col}
             row={row}
             rowIndex={rowIndex}
-            editable={editable}
+            editable={isRowEditable || isAllEditable}
             onEditRow={onEditRow}
             onToggleAllEdit={onToggleAllEdit}
             isAllEditable={isAllEditable}
@@ -61,3 +71,8 @@ export function TableRow<T>({
     </div>
   );
 }
+
+// 👇 Wrap with generic-preserving forwardRef helper
+export const TableRow = React.forwardRef(TableRowInner) as <T>(
+  props: DataRowProps<T> & { ref?: React.Ref<HTMLDivElement> }
+) => ReturnType<typeof TableRowInner>;

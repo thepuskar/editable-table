@@ -1,3 +1,5 @@
+import { Pencil, Save, Trash2, X } from "lucide-react";
+import { Button } from "../ui/button";
 import { ColumnType } from "./types";
 
 export type DataType = {
@@ -100,21 +102,49 @@ export const getColumns = (
     header: "Actions",
     action: (row, rowIndex, ctx) => (
       <div className="flex gap-2">
-        <button
-          className="text-blue-600 text-xs"
-          onClick={(e) => {
-            e.stopPropagation();
-            ctx?.onEditRow?.(rowIndex);
-          }}
-        >
-          Edit
-        </button>
-        <button
-          className="text-red-600 text-xs"
-          onClick={() => console.log("Delete", row)}
-        >
-          Delete
-        </button>
+        {!ctx?.editable && (
+          <>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                ctx?.onEditRow?.(rowIndex);
+              }}
+              variant={"ghost"}
+              className="cursor-pointer hover:bg-gray-200 !px-2 !py-2 border"
+            >
+              <Pencil className="size-4" />
+            </Button>
+            <Button
+              variant={"ghost"}
+              className="cursor-pointer hover:bg-red-200 !px-2 !py-2 border"
+            >
+              <Trash2 className="size-4" />
+            </Button>
+          </>
+        )}
+        {ctx?.editable && (
+          <>
+            <Button
+              onClick={() => {
+                // TODO: Save logic here (persist updated values)
+                ctx?.onCancelEdit?.(); // make not editable
+              }}
+              variant={"ghost"}
+              className="cursor-pointer hover:bg-green-200 !px-2 !py-2 border"
+            >
+              <Save className="size-4" />
+            </Button>
+            <Button
+              onClick={() => {
+                ctx?.onCancelEdit?.();
+              }}
+              variant={"ghost"}
+              className="cursor-pointer hover:bg-gray-200 !px-2 !py-2 border"
+            >
+              <X className="size-4" />
+            </Button>
+          </>
+        )}
       </div>
     ),
     meta: {

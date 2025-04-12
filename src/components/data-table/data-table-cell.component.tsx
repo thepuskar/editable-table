@@ -14,7 +14,7 @@ type DataTableCellProps<T> = {
   column: ColumnType<T>;
   rowIndex: number;
   editable: boolean;
-  onEditRow?: (index: number) => void;
+  onEditRow?: (index: number | null) => void;
   onToggleAllEdit?: () => void;
   isAllEditable?: boolean;
 };
@@ -34,6 +34,10 @@ export const DataTableCell = <T,>({
       onEditRow,
       onToggleAllEdit,
       isAllEditable,
+      editable,
+      onCancelEdit: () => {
+        onEditRow?.(null);
+      },
     });
   }
 
