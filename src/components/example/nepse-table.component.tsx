@@ -6,7 +6,7 @@ import { data } from "./data";
 export const NepseTable = () => {
   const columns = getColumns(true);
   const rowSchema = z.object({
-    balance: z
+    balance: z.coerce
       .number({ required_error: "Balance is required" })
       .min(1, "Balance is required"),
     ltp: z.number({ required_error: "LTP is required" }),
@@ -19,6 +19,8 @@ export const NepseTable = () => {
       id="script"
       isEditable
       validationSchema={rowSchema}
+      stickyHeader
+      height="520px"
     />
   );
 };

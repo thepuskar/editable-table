@@ -47,6 +47,7 @@ export const getColumns = (
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
+      inputType: "number",
     },
   },
   {
