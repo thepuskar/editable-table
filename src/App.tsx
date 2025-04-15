@@ -35,7 +35,7 @@ function App() {
           />
         </div>
         <div className="border-2 border-red-500 mt-8">
-          <div className="overflow-y-auto w-fit">
+          <div className="overflow-y-auto h-42">
             <div className="py-2 bg-indigo-500 text-center text-white sticky top-0  ">
               This is a header
             </div>

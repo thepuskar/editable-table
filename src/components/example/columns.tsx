@@ -1,15 +1,14 @@
 import { Pencil, Save, Trash2, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { ColumnType } from "../data-table/types";
-import { NepseDataType } from "./types";
+import { NepseDataType } from "./data2";
 
 export const getColumns = (
   isEditable?: boolean | false
 ): ColumnType<NepseDataType>[] => [
   {
-    header: "Script",
-    accessor: "script",
-    cell: (row: NepseDataType) => <span>{row.script}</span>,
+    header: "SN",
+    accessor: "id",
     meta: {
       cellClassName: "w-[150px]",
       inputType: "text",
@@ -17,8 +16,33 @@ export const getColumns = (
     editable: isEditable,
   },
   {
-    header: "Balance",
-    accessor: "balance",
+    header: "Symbol",
+    accessor: "symbol",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+      inputType: "text",
+    },
+  },
+  {
+    header: "Close Price",
+    accessor: "closePrice",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
+  },
+  {
+    header: "Open Price",
+    accessor: "openPrice",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[150px]",
+    },
+  },
+  {
+    header: "High Price",
+    accessor: "highPrice",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
@@ -26,65 +50,65 @@ export const getColumns = (
     },
   },
   {
-    header: "Previous LTP",
-    accessor: "prevLTP",
+    header: "Low Price",
+    accessor: "lowPrice",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
     },
   },
   {
-    header: "Previous Value",
-    accessor: "prevValue",
+    header: "Total Traded Quantity",
+    accessor: "totalTradedQuantity",
+    editable: isEditable,
+    meta: {
+      cellClassName: "w-[20px]",
+      headerClassName: "bg-red-500 !w-[20px]",
+    },
+  },
+  {
+    header: "Total Traded Value",
+    accessor: "totalTradedValue",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
     },
   },
   {
-    header: "LTP",
-    accessor: "ltp",
-    editable: isEditable,
-    meta: {
-      cellClassName: "w-[150px]",
-      inputType: "number",
-    },
-  },
-  {
-    header: "Value As of LTP",
-    accessor: "valueAsOfLTP",
+    header: "Total Trades ",
+    accessor: "totalTrades",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
     },
   },
   {
-    header: "Cost Price",
-    accessor: "costPrice",
+    header: "LTP ",
+    accessor: "lastUpdatedPrice",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
     },
   },
   {
-    header: "Total Investment",
-    accessor: "totalInvestment",
+    header: "Fifty Two Week High ",
+    accessor: "fiftyTwoWeekHigh",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
     },
   },
   {
-    header: "Overall P/L",
-    accessor: "overallPL",
+    header: "Fifty Two Week Low",
+    accessor: "fiftyTwoWeekLow",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
     },
   },
   {
-    header: "P/L %",
-    accessor: "plPercent",
+    header: "Average Traded Price",
+    accessor: "averageTradedPrice",
     editable: isEditable,
     meta: {
       cellClassName: "w-[150px]",
@@ -143,71 +167,8 @@ export const getColumns = (
       </div>
     ),
     meta: {
-      headerClassName: "text-center",
-      cellClassName: "text-center",
+      headerClassName: "text-center right-0 bg-blue-500",
+      cellClassName: "text-center absolute right-0 bg-blue-500",
     },
-  },
-];
-
-export const data: NepseDataType[] = [
-  {
-    script: "NABIL",
-    balance: 100,
-    prevLTP: 300,
-    prevValue: 30000,
-    ltp: 310,
-    valueAsOfLTP: 31000,
-    costPrice: 280,
-    totalInvestment: 28000,
-    overallPL: 3000,
-    plPercent: "10.7%",
-  },
-  {
-    script: "NLIC",
-    balance: 50,
-    prevLTP: 600,
-    prevValue: 30000,
-    ltp: 580,
-    valueAsOfLTP: 29000,
-    costPrice: 620,
-    totalInvestment: 31000,
-    overallPL: -2000,
-    plPercent: "-6.5%",
-  },
-  {
-    script: "NRIC",
-    balance: 200,
-    prevLTP: 500,
-    prevValue: 100000,
-    ltp: 520,
-    valueAsOfLTP: 104000,
-    costPrice: 480,
-    totalInvestment: 96000,
-    overallPL: 8000,
-    plPercent: "8.3%",
-  },
-  {
-    script: "NIFRA",
-    balance: 300,
-    prevLTP: 250,
-    prevValue: 75000,
-    ltp: 240,
-    valueAsOfLTP: 72000,
-    costPrice: 260,
-    totalInvestment: 78000,
-    overallPL: -6000,
-    plPercent: "-7.7%",
-  },
-  {
-    script: "NEPSE",
-    balance: 80,
-    prevLTP: 2000,
-    prevValue: 160000,
-    ltp: 2100,
-    valueAsOfLTP: 168000,
-    costPrice: 1900,
-    totalInvestment: 152000,
-    overallPL: 16000,
-    plPercent: "10.5%",
   },
 ];
